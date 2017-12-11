@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# todo:他の回答を確認する
+
 
 def search_symmetry_brackets(idx, bracket_list, bracket):
     if bracket == '(':

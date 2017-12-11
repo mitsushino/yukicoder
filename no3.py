@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-
-import sys
+# 参考URL
+# http://blog.livedoor.jp/yoshichi9-solve/archives/16290354.html
+from collections import deque
 
 
 def make_one_count_of_binary_digit(N):
@@ -10,30 +11,27 @@ def make_one_count_of_binary_digit(N):
     return l
 
 
-def move_idx(p_list, idx, N):
-    p_list[idx]['right_move'] = True
-    if idx + binary_digit_one_list[idx] <= N:
-        return p_list, idx + binary_digit_one_list[idx]
-    p_list[idx]['left_move'] = True
-    return p_list, idx - binary_digit_one_list[idx]
+def bfs(N, binary_digit_one_list):
+    d = [0 for _ in range(N + 1)]
+    d[1] = 1
+    q = deque()
+    q.append(1)
+    while q:
+        idx = q.popleft()
+        if idx == N:
+            return d[idx]
+        right = idx + binary_digit_one_list[idx]
+        left = idx - binary_digit_one_list[idx]
+        if (0 < right <= N) and d[right] == 0:
+            q.append(right)
+            d[right] = d[idx] + 1
+        if (0 < left <= N) and d[left] == 0:
+            q.append(left)
+            d[left] = d[idx] + 1
+    return -1
 
 
 if __name__ == '__main__':
     N = int(input())
-    possibility_list = [{'left_move': None, 'right_move': None} for _ in range(0, N + 1)]
     binary_digit_one_list = make_one_count_of_binary_digit(N)
-    flag = True
-    idx = 1
-    count = 1
-    while flag:
-        if idx == N:
-            print(count)
-            flag = False
-            sys.exit()
-        if possibility_list[idx]['left_move'] and possibility_list[idx]['right_move']:
-            print(-1)
-            flag = False
-            sys.exit()
-        else:
-            possibility_list, idx = move_idx(possibility_list, idx, N)
-            count += 1
+    print(bfs(N, binary_digit_one_list))
